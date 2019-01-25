@@ -1,0 +1,162 @@
+openapi: 3.0.0
+servers:
+# Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/mitchbeard/eitri-3/1.0.0
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/mitchbeard/eitri/1.0.0
+info:
+  description: API for Eitri, the Norse artifacts database
+  version: "1.0.0"
+  title: Eitri
+  contact:
+    email: mitchbeard@gmail.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+tags:
+  - name: admins
+    description: Secured Admin-only calls
+  - name: developers
+    description: Operations available to regular developers
+paths:
+  /types:
+    get:
+      tags:
+        - developers
+      summary: "List all property types"
+      operationId: getPropertyTypes
+      responses:
+        200:
+          description: Return all property types
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PropertyType'
+  /artifacts:
+    get:
+      tags:
+        - developers
+      summary: "Get all the artifacts in the database"
+      operationId: getArtifacts
+      responses:
+        200:
+          description: Return all the artifacts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Artifact'
+components:
+  schemas:
+    Artifact:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        name:
+          type: string
+          example: "Artifact 123"
+        thumbnail:
+          type: string
+          format: url
+        additionalImages:
+          type: array
+          items:
+            type: string
+            format: url
+        properties:
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/StringProperty'
+              - $ref: '#/components/schemas/MultiStringProperty'
+              - $ref: '#/components/schemas/GeoProperty'
+              - $ref: '#/components/schemas/DateRangeProperty'
+    PropertyType:
+      type: object
+      required:
+        - id
+        - displayName
+        - isHistogramProp
+        - isMapProp
+        - isTimelineProp
+      properties:
+        id:
+          type: string
+          example: 123
+        displayName:
+          type: string
+          example: "Discovery Date"
+        isHistogramProp:
+          type: boolean
+        isMapProp:
+          type: boolean
+        isTimelineProp:
+          type: boolean
+    AbstractProperty:
+      type: object
+      required:
+        - type
+        - propertyTypeId
+      properties:
+        type:
+          type: string
+          enum:
+            - StringProperty
+            - MultiStringProperty
+            - GeoProperty
+            - DateRangeProperty
+    StringProperty:
+      allOf:
+        - $ref: '#/components/schemas/AbstractProperty'
+        - type: object
+          required:
+            - value
+          properties:
+            value:
+              type: string
+              example: "Carved"
+    MultiStringProperty:
+      allOf:
+        - $ref: '#/components/schemas/AbstractProperty'
+        - type: object
+          required:
+            - values
+          properties:
+            values:
+              type: array
+              items:
+                type: string
+    GeoProperty:
+      allOf:
+        - $ref: '#/components/schemas/AbstractProperty'
+        - type: object
+          required:
+            - lat
+            - lon
+          properties:
+            lat:
+              type: number
+            lon:
+              type: number
+    DateRangeProperty:
+      allOf:
+        - $ref: '#/components/schemas/AbstractProperty'
+        - type: object
+          required:
+            - start
+            - end
+          properties:
+            start:
+              type: integer
+            end:
+              type: integer
