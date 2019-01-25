@@ -81,6 +81,8 @@ components:
               - $ref: '#/components/schemas/MultiStringProperty'
               - $ref: '#/components/schemas/GeoProperty'
               - $ref: '#/components/schemas/DateRangeProperty'
+            discriminator:
+              propertyName: type
     PropertyType:
       type: object
       required:
@@ -92,6 +94,7 @@ components:
       properties:
         id:
           type: string
+          format: uuid
           example: 123
         displayName:
           type: string
@@ -115,6 +118,10 @@ components:
             - MultiStringProperty
             - GeoProperty
             - DateRangeProperty
+        propertyTypeId:
+          type: string
+          format: uuid
+          example: 13
     StringProperty:
       allOf:
         - $ref: '#/components/schemas/AbstractProperty'
