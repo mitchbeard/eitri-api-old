@@ -2,5 +2,5 @@
 The API for Eitri
 
 ## Usage instructions:
-`brew install openapi-generator`
-`./generate-code.sh`
+- `brew install openapi-generator`
+- `./generate-code.sh`
