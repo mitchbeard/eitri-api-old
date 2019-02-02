@@ -52,6 +52,14 @@ paths:
                   $ref: '#/components/schemas/Artifact'
 components:
   schemas:
+    PropertyValueType:
+      type: string
+      enum:
+        - StringProperty
+        - MultiStringProperty
+        - GeoProperty
+        - DateRangeProperty
+        - ImageProperty
     Artifact:
       type: object
       required:
@@ -60,71 +68,65 @@ components:
       properties:
         id:
           type: string
-          format: uuid
           example: d290f1ee-6c54-4b01-90e6-d701748f0851
-        name:
-          type: string
-          example: "Artifact 123"
-        thumbnail:
-          type: string
-          format: url
-        additionalImages:
-          type: array
-          items:
-            type: string
-            format: url
         properties:
           type: array
           items:
             oneOf:
-              - $ref: '#/components/schemas/StringProperty'
-              - $ref: '#/components/schemas/MultiStringProperty'
-              - $ref: '#/components/schemas/GeoProperty'
-              - $ref: '#/components/schemas/DateRangeProperty'
-            discriminator:
-              propertyName: type
+            - $ref: '#/components/schemas/StringProperty'
+            - $ref: '#/components/schemas/MultiStringProperty'
+            - $ref: '#/components/schemas/GeoProperty'
+            - $ref: '#/components/schemas/DateRangeProperty'
+            - $ref: '#/components/schemas/ImageProperty'
     PropertyType:
       type: object
       required:
         - id
         - displayName
-        - isHistogramProp
-        - isMapProp
+        - valueType
+        - showInViewer
+        - showInHistogram
+        - isNameProp
+        - isThumbnailProp
         - isTimelineProp
+        - isMapProp
       properties:
         id:
           type: string
-          format: uuid
           example: 123
         displayName:
           type: string
           example: "Discovery Date"
-        isHistogramProp:
+        valueType:
+          $ref: '#/components/schemas/PropertyValueType'
+        showInViewer:
           type: boolean
-        isMapProp:
+        showInHistogram:
+          type: boolean
+        isNameProp:
+          type: boolean
+        isThumbnailProp:
           type: boolean
         isTimelineProp:
           type: boolean
-    AbstractProperty:
+        isMapProp:
+          type: boolean
+    Property:
       type: object
+      discriminator:
+        propertyName: valueType
       required:
-        - type
         - propertyTypeId
+        - valueType
       properties:
-        type:
-          type: string
-          enum:
-            - StringProperty
-            - MultiStringProperty
-            - GeoProperty
-            - DateRangeProperty
         propertyTypeId:
           type: string
-          format: uuid
           example: 13
+        valueType:
+          $ref: '#/components/schemas/PropertyValueType'
     StringProperty:
       allOf:
-        - $ref: '#/components/schemas/AbstractProperty'
+        - $ref: '#/components/schemas/Property'
         - type: object
           required:
             - value
@@ -134,7 +136,7 @@ components:
               example: "Carved"
     MultiStringProperty:
       allOf:
-        - $ref: '#/components/schemas/AbstractProperty'
+        - $ref: '#/components/schemas/Property'
         - type: object
           required:
             - values
@@ -145,7 +147,7 @@ components:
                 type: string
     GeoProperty:
       allOf:
-        - $ref: '#/components/schemas/AbstractProperty'
+        - $ref: '#/components/schemas/Property'
         - type: object
           required:
             - lat
@@ -157,7 +159,7 @@ components:
               type: number
     DateRangeProperty:
       allOf:
-        - $ref: '#/components/schemas/AbstractProperty'
+        - $ref: '#/components/schemas/Property'
         - type: object
           required:
             - start
@@ -167,3 +169,13 @@ components:
               type: integer
             end:
               type: integer
+    ImageProperty:
+      allOf:
+        - $ref: '#/components/schemas/Property'
+        - type: object
+          required:
+            - url
+          properties:
+            url:
+              type: string
+              format: url
