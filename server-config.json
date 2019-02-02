@@ -1,0 +1,8 @@
+{
+  "apiPackage": "com.beardlabs.eitri.api",
+  "modelPackage": "com.beardlabs.eitri.model",
+  "interfaceOnly": "true",
+  "useSwaggerAnnotations": "false",
+  "generatePom": "false",
+  "java8": "true"
+}
