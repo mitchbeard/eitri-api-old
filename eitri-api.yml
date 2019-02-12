@@ -60,6 +60,7 @@ components:
         - GeoProperty
         - DateRangeProperty
         - ImageProperty
+        - MultiImageProperty
     Artifact:
       type: object
       required:
@@ -78,6 +79,7 @@ components:
             - $ref: '#/components/schemas/GeoProperty'
             - $ref: '#/components/schemas/DateRangeProperty'
             - $ref: '#/components/schemas/ImageProperty'
+            - $ref: '#/components/schemas/MultiImageProperty'
     PropertyType:
       type: object
       required:
@@ -150,25 +152,19 @@ components:
         - $ref: '#/components/schemas/Property'
         - type: object
           required:
-            - lat
-            - lon
+            - value
           properties:
-            lat:
-              type: number
-            lon:
-              type: number
+            value:
+              $ref: '#/components/schemas/Point'
     DateRangeProperty:
       allOf:
         - $ref: '#/components/schemas/Property'
         - type: object
           required:
-            - start
-            - end
+            - value
           properties:
-            start:
-              type: integer
-            end:
-              type: integer
+            value:
+              $ref: '#/components/schemas/DateRange'
     ImageProperty:
       allOf:
         - $ref: '#/components/schemas/Property'
@@ -179,3 +175,36 @@ components:
             url:
               type: string
               format: url
+    MultiImageProperty:
+      allOf:
+        - $ref: '#/components/schemas/Property'
+        - type: object
+          required:
+            - urls
+          properties:
+            urls:
+              type: array
+              items:
+                type: string
+                format: url
+    DateRange:
+      type: object
+      required:
+        - start
+        - end
+      properties:
+        start:
+          type: integer
+        end:
+          type: integer
+    Point:
+      type: object
+      required:
+        - lon
+        - lat
+      properties:
+        lon:
+          type: number
+        lat:
+          type: number
+
