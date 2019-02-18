@@ -59,13 +59,10 @@ components:
         - MultiStringProperty
         - GeoProperty
         - DateRangeProperty
-        - ImageProperty
-        - MultiImageProperty
     Artifact:
       type: object
       required:
         - id
-        - name
       properties:
         id:
           type: string
@@ -78,8 +75,33 @@ components:
             - $ref: '#/components/schemas/MultiStringProperty'
             - $ref: '#/components/schemas/GeoProperty'
             - $ref: '#/components/schemas/DateRangeProperty'
-            - $ref: '#/components/schemas/ImageProperty'
-            - $ref: '#/components/schemas/MultiImageProperty'
+        thumbnail:
+          $ref: '#/components/schemas/ArtifactThumbnail'
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/ArtifactImage'
+    ArtifactThumbnail:
+      type: object
+      properties:
+        smallUrl:
+          type: string
+          format: url
+        largeUrl:
+          type: string
+          format: url
+    ArtifactImage:
+      type: object
+      properties:
+        smallUrl:
+          type: string
+          format: url
+        largeUrl:
+          type: string
+          format: url
+        originalUrl:
+          type: string
+          format: url
     PropertyType:
       type: object
       required:
@@ -165,28 +187,6 @@ components:
           properties:
             value:
               $ref: '#/components/schemas/DateRange'
-    ImageProperty:
-      allOf:
-        - $ref: '#/components/schemas/Property'
-        - type: object
-          required:
-            - url
-          properties:
-            url:
-              type: string
-              format: url
-    MultiImageProperty:
-      allOf:
-        - $ref: '#/components/schemas/Property'
-        - type: object
-          required:
-            - urls
-          properties:
-            urls:
-              type: array
-              items:
-                type: string
-                format: url
     DateRange:
       type: object
       required:

@@ -10,4 +10,5 @@ cd "$API_DIR"
 rm -rf "$FE_DIR"
 openapi-generator generate -i "$API_DIR/eitri-api.yml" -g typescript-fetch -o "$FE_DIR"
 
+rm -rf "$BE_DIR/src/gen"
 openapi-generator generate -i "$API_DIR/eitri-api.yml" -g jaxrs-spec -o "$BE_DIR" -c server-config.json
